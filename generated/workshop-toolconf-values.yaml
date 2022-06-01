@@ -1,0 +1,20 @@
+configs:
+  tool_conf_yescds.xml: |
+    <?xml version='1.0' encoding='utf-8'?>
+      <toolbox monitor="true">
+          <tool file="interactive/biocworkshop_a1_cancer_table.xml" />
+          <tool file="interactive/biocworkshop_a2_rates.xml" />
+          <tool file="interactive/biocworkshop_a3_monitoring.xml" />
+          <tool file="interactive/biocworkshop_a4_interactive_tables.xml" />
+          <tool file="interactive/biocworkshop_a5_data_graphics.xml" />
+          <tool file="interactive/biocworkshop_a6_standardization.xml" />
+          <tool file="interactive/biocworkshop_b1_global.xml" />
+          <tool file="interactive/biocworkshop_b2_table_plus_geo.xml" />
+          <tool file="interactive/biocworkshop_b3_counties.xml" />
+          <tool file="interactive/biocworkshop_c1_body_overall.xml" />
+          <tool file="interactive/biocworkshop_c2_variation_survival.xml" />
+          <tool file="interactive/biocworkshop_c3_subtypes_molecular.xml" />
+          <tool file="interactive/biocworkshop_d1_equipoise.xml" />
+          <tool file="interactive/biocworkshop_d2_randomization_bias.xml" />
+          <tool file="interactive/biocworkshop_d3_comparing_trt.xml" />
+      </toolbox>

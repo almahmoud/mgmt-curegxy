@@ -1,0 +1,1606 @@
+extraFileMappings:
+  /galaxy/server/tools/interactive/biocworkshop_a1_cancer_table.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a1_cancer_table" tool_type="interactive" name="(A1) Cancer experiences: a personal view" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a1_cancer_table" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A1_cancer_table.ipynb ./A1_cancer_table.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A1_cancer_table.ipynb && jupyter trust ./YESCDS/inst/ipynb/A1_cancer_table.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A1_cancer_table.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A1_cancer_table.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_a2_rates.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a2_rates" tool_type="interactive" name="(A2) Cancer rates and public health" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a2_rates" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A2_rates.ipynb ./A2_rates.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A2_rates.ipynb && jupyter trust ./YESCDS/inst/ipynb/A2_rates.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A2_rates.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A2_rates.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_a3_monitoring.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a3_monitoring" tool_type="interactive" name="(A3) Variation in cancer rates, recorded at the county level" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a3_monitoring" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A3_monitoring.ipynb ./A3_monitoring.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A3_monitoring.ipynb && jupyter trust ./YESCDS/inst/ipynb/A3_monitoring.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A3_monitoring.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A3_monitoring.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_a4_interactive_tables.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a4_interactive_tables" tool_type="interactive" name="(A4) A tabulation of cancer types and incidence rates across ‘Metropolitan Statistical Areas’" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a4_interactive_tables" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb ./A4_interactive_tables.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A4_interactive_tables.ipynb && jupyter trust ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A4_interactive_tables.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_a5_data_graphics.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a5_data_graphics" tool_type="interactive" name="(A5) Visualizing variability" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a5_data_graphics" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A5_data_graphics.ipynb ./A5_data_graphics.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A5_data_graphics.ipynb && jupyter trust ./YESCDS/inst/ipynb/A5_data_graphics.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A5_data_graphics.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A5_data_graphics.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_a6_standardization.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a6_standardization" tool_type="interactive" name="(A6) Fair comparisons" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a6_standardization" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A6_standardization.ipynb ./A6_standardization.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A6_standardization.ipynb && jupyter trust ./YESCDS/inst/ipynb/A6_standardization.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A6_standardization.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A6_standardization.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_b1_global.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_b1_global" tool_type="interactive" name="(B1) Interactive cancer maps" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="b1_global" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/B1_global.ipynb ./B1_global.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./B1_global.ipynb && jupyter trust ./YESCDS/inst/ipynb/B1_global.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/B1_global.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./B1_global.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_b2_table_plus_geo.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_b2_table_plus_geo" tool_type="interactive" name="(B2) The basic geographic data about US counties" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="b2_table_plus_geo" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb ./B2_table_plus_geo.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./B2_table_plus_geo.ipynb && jupyter trust ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./B2_table_plus_geo.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_b3_counties.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_b3_counties" tool_type="interactive" name="(B3) Cancer rates in Massachusetts counties, tabulated" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="b3_counties" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/B3_counties.ipynb ./B3_counties.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./B3_counties.ipynb && jupyter trust ./YESCDS/inst/ipynb/B3_counties.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/B3_counties.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./B3_counties.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_c1_body_overall.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_c1_body_overall" tool_type="interactive" name="(C1) Cancers originate in specific organs" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="c1_body_overall" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/C1_body_overall.ipynb ./C1_body_overall.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./C1_body_overall.ipynb && jupyter trust ./YESCDS/inst/ipynb/C1_body_overall.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/C1_body_overall.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./C1_body_overall.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_c2_variation_survival.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_c2_variation_survival" tool_type="interactive" name="(C2) The survival curve for a cohort of individuals" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="c2_variation_survival" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/C2_variation_survival.ipynb ./C2_variation_survival.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./C2_variation_survival.ipynb && jupyter trust ./YESCDS/inst/ipynb/C2_variation_survival.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/C2_variation_survival.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./C2_variation_survival.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_c3_subtypes_molecular.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_c3_subtypes_molecular" tool_type="interactive" name="(C3) Cancers locate in specific organs" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="c3_subtypes_molecular" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb ./C3_subtypes_molecular.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./C3_subtypes_molecular.ipynb && jupyter trust ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./C3_subtypes_molecular.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_d1_equipoise.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_d1_equipoise" tool_type="interactive" name="(D1) Equipoise: individual and clinical" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="d1_equipoise" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/D1_equipoise.ipynb ./D1_equipoise.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./D1_equipoise.ipynb && jupyter trust ./YESCDS/inst/ipynb/D1_equipoise.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/D1_equipoise.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./D1_equipoise.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_d2_randomization_bias.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_d2_randomization_bias" tool_type="interactive" name="(D2) Cancers locate in specific organs" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="d2_randomization_bias" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb ./D2_randomization_bias.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./D2_randomization_bias.ipynb && jupyter trust ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./D2_randomization_bias.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
+  /galaxy/server/tools/interactive/biocworkshop_d3_comparing_trt.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_d3_comparing_trt" tool_type="interactive" name="(D3) Cancers locate in specific organs" version="0.2">
+          <requirements>
+              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="d3_comparing_trt" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb ./D3_comparing_trt.ipynb &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./D3_comparing_trt.ipynb && jupyter trust ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./D3_comparing_trt.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
