@@ -45,7 +45,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A1_cancer_table.ipynb ./A1_cancer_table.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A1_cancer_table.ipynb ./A1_cancer_table.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A1_cancer_table.ipynb && jupyter trust ./YESCDS/inst/ipynb/A1_cancer_table.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -152,7 +152,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A2_rates.ipynb ./A2_rates.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A2_rates.ipynb ./A2_rates.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A2_rates.ipynb && jupyter trust ./YESCDS/inst/ipynb/A2_rates.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -259,7 +259,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A3_monitoring.ipynb ./A3_monitoring.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A3_monitoring.ipynb ./A3_monitoring.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A3_monitoring.ipynb && jupyter trust ./YESCDS/inst/ipynb/A3_monitoring.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -366,7 +366,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb ./A4_interactive_tables.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb ./A4_interactive_tables.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A4_interactive_tables.ipynb && jupyter trust ./YESCDS/inst/ipynb/A4_interactive_tables.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -473,7 +473,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A5_data_graphics.ipynb ./A5_data_graphics.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A5_data_graphics.ipynb ./A5_data_graphics.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A5_data_graphics.ipynb && jupyter trust ./YESCDS/inst/ipynb/A5_data_graphics.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -580,7 +580,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/A6_standardization.ipynb ./A6_standardization.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/A6_standardization.ipynb ./A6_standardization.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./A6_standardization.ipynb && jupyter trust ./YESCDS/inst/ipynb/A6_standardization.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -687,7 +687,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/B1_global.ipynb ./B1_global.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/B1_global.ipynb ./B1_global.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./B1_global.ipynb && jupyter trust ./YESCDS/inst/ipynb/B1_global.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -794,7 +794,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb ./B2_table_plus_geo.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb ./B2_table_plus_geo.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./B2_table_plus_geo.ipynb && jupyter trust ./YESCDS/inst/ipynb/B2_table_plus_geo.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -901,7 +901,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/B3_counties.ipynb ./B3_counties.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/B3_counties.ipynb ./B3_counties.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./B3_counties.ipynb && jupyter trust ./YESCDS/inst/ipynb/B3_counties.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1008,7 +1008,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/C1_body_overall.ipynb ./C1_body_overall.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/C1_body_overall.ipynb ./C1_body_overall.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./C1_body_overall.ipynb && jupyter trust ./YESCDS/inst/ipynb/C1_body_overall.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1115,7 +1115,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/C2_variation_survival.ipynb ./C2_variation_survival.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/C2_variation_survival.ipynb ./C2_variation_survival.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./C2_variation_survival.ipynb && jupyter trust ./YESCDS/inst/ipynb/C2_variation_survival.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1222,7 +1222,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb ./C3_subtypes_molecular.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb ./C3_subtypes_molecular.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./C3_subtypes_molecular.ipynb && jupyter trust ./YESCDS/inst/ipynb/C3_subtypes_molecular.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1329,7 +1329,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/D1_equipoise.ipynb ./D1_equipoise.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/D1_equipoise.ipynb ./D1_equipoise.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./D1_equipoise.ipynb && jupyter trust ./YESCDS/inst/ipynb/D1_equipoise.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1436,7 +1436,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb ./D2_randomization_bias.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb ./D2_randomization_bias.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./D2_randomization_bias.ipynb && jupyter trust ./YESCDS/inst/ipynb/D2_randomization_bias.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
@@ -1543,7 +1543,7 @@ extraFileMappings:
       
               #if $mode.mode_select == 'scratch':
                   ## copy chapter notebook
-                  ln -s ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb ./D3_comparing_trt.ipynb &&
+                  ln -s ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb ./D3_comparing_trt.ipynb && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
                   cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
                   jupyter trust ./D3_comparing_trt.ipynb && jupyter trust ./YESCDS/inst/ipynb/D3_comparing_trt.ipynb &&
                   jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
