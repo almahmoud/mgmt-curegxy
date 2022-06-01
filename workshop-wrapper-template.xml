@@ -35,7 +35,7 @@
 
         #if $mode.mode_select == 'scratch':
             ## copy chapter notebook
-            ln -s ./YESCDS/inst/ipynb/##PLACEHOLDERNOTEBOOKNAME## ./##PLACEHOLDERNOTEBOOKNAME## && ln -s ./YESCDS/inst/ipynb/*.jpg ./ && ln -s ./YESCDS/inst/ipynb/*.png ./ &&
+            ln -s ./YESCDS/inst/ipynb/##PLACEHOLDERNOTEBOOKNAME## ./##PLACEHOLDERNOTEBOOKNAME## && ln -s YESCDS/inst/ipynb/images ./images &&
             cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
             jupyter trust ./##PLACEHOLDERNOTEBOOKNAME## && jupyter trust ./YESCDS/inst/ipynb/##PLACEHOLDERNOTEBOOKNAME## &&
             jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
