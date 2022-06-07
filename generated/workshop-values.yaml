@@ -82,7 +82,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A1) Cancer experiences: a personal view"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -189,7 +189,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A2) Cancer rates and public health"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -296,7 +296,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A3) Variation in cancer rates, recorded at the county level"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -403,7 +403,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A4) A tabulation of cancer types and incidence rates across ‘Metropolitan Statistical Areas’"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -510,7 +510,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A5) Visualizing variability"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -617,7 +617,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A6) Fair comparisons"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -724,7 +724,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B1) Interactive cancer maps"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -831,7 +831,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B2) The basic geographic data about US counties"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -938,7 +938,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B3) Cancer rates in Massachusetts counties, tabulated"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1045,7 +1045,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C1) Cancers originate in specific organs"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1152,7 +1152,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C2) The survival curve for a cohort of individuals"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1259,7 +1259,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C3) Cancers locate in specific organs"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1366,7 +1366,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D1) Equipoise: individual and clinical"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1473,7 +1473,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D2) Cancers locate in specific organs"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1580,7 +1580,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D3) Cancers locate in specific organs"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
