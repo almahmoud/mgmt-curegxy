@@ -72,7 +72,7 @@
 
     </inputs>
     <outputs>
-        <data name="jupyter_notebook" format="ipynb" label="Executed Notebook"></data>
+        <data name="jupyter_notebook" format="ipynb" label="##PLACEHOLDERLONGNAME##"></data>
     </outputs>
     <tests>
         <test expect_num_outputs="1">
