@@ -10,7 +10,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a1_cancer_table" tool_type="interactive" name="(A1) Cancer experiences: a personal view" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a1_cancer_table" requires_domain="True">
@@ -117,7 +117,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a2_rates" tool_type="interactive" name="(A2) Cancer rates and public health" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a2_rates" requires_domain="True">
@@ -224,7 +224,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a3_monitoring" tool_type="interactive" name="(A3) Variation in cancer rates, recorded at the county level" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a3_monitoring" requires_domain="True">
@@ -331,7 +331,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a4_interactive_tables" tool_type="interactive" name="(A4) A tabulation of cancer types and incidence rates across ‘Metropolitan Statistical Areas’" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a4_interactive_tables" requires_domain="True">
@@ -438,7 +438,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a5_data_graphics" tool_type="interactive" name="(A5) Visualizing variability" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a5_data_graphics" requires_domain="True">
@@ -545,7 +545,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_a6_standardization" tool_type="interactive" name="(A6) Fair comparisons" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="a6_standardization" requires_domain="True">
@@ -652,7 +652,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_b1_global" tool_type="interactive" name="(B1) Interactive cancer maps" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="b1_global" requires_domain="True">
@@ -759,7 +759,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_b2_table_plus_geo" tool_type="interactive" name="(B2) The basic geographic data about US counties" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="b2_table_plus_geo" requires_domain="True">
@@ -866,7 +866,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_b3_counties" tool_type="interactive" name="(B3) Cancer rates in Massachusetts counties, tabulated" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="b3_counties" requires_domain="True">
@@ -973,7 +973,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_c1_body_overall" tool_type="interactive" name="(C1) Cancers originate in specific organs" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="c1_body_overall" requires_domain="True">
@@ -1080,7 +1080,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_c2_variation_survival" tool_type="interactive" name="(C2) The survival curve for a cohort of individuals" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="c2_variation_survival" requires_domain="True">
@@ -1187,7 +1187,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_c3_subtypes_molecular" tool_type="interactive" name="(C3) Preliminaries" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="c3_subtypes_molecular" requires_domain="True">
@@ -1294,7 +1294,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d1_clin_trial_concepts" tool_type="interactive" name="(D1) Clinical trials for cancer treatments" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d1_clin_trial_concepts" requires_domain="True">
@@ -1401,7 +1401,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d1_equipoise" tool_type="interactive" name="(D1) Equipoise: individual and clinical" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d1_equipoise" requires_domain="True">
@@ -1508,7 +1508,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d2_equipoise" tool_type="interactive" name="(D2) Equipoise: individual and clinical" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d2_equipoise" requires_domain="True">
@@ -1615,7 +1615,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d2_randomization_bias" tool_type="interactive" name="(D2) Cancers locate in specific organs" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d2_randomization_bias" requires_domain="True">
@@ -1722,7 +1722,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d3_comparing_trt" tool_type="interactive" name="(D3) Cancers locate in specific organs" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d3_comparing_trt" requires_domain="True">
@@ -1829,7 +1829,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d3_randomization_bias" tool_type="interactive" name="(D3) Cancers locate in specific organs" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d3_randomization_bias" requires_domain="True">
@@ -1936,7 +1936,7 @@ extraFileMappings:
     content: |
       <tool id="interactive_tool_jupyter_d4_comparing_trt" tool_type="interactive" name="(D4) Cancers locate in specific organs" version="0.2">
           <requirements>
-              <container type="docker">almahmoud/yes-jupyter:21.10</container>
+              <container type="docker">bioconductor/rstudio_yescds:yescds</container>
           </requirements>
           <entry_points>
               <entry_point name="d4_comparing_trt" requires_domain="True">
