@@ -15,10 +15,7 @@ configs:
           <tool file="interactive/biocworkshop_c2_variation_survival.xml" />
           <tool file="interactive/biocworkshop_c3_subtypes_molecular.xml" />
           <tool file="interactive/biocworkshop_d1_clin_trial_concepts.xml" />
-          <tool file="interactive/biocworkshop_d1_equipoise.xml" />
           <tool file="interactive/biocworkshop_d2_equipoise.xml" />
-          <tool file="interactive/biocworkshop_d2_randomization_bias.xml" />
-          <tool file="interactive/biocworkshop_d3_comparing_trt.xml" />
           <tool file="interactive/biocworkshop_d3_randomization_bias.xml" />
           <tool file="interactive/biocworkshop_d4_comparing_trt.xml" />
       </toolbox>
