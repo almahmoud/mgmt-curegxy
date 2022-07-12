@@ -1,4 +1,111 @@
 extraFileMappings:
+  /galaxy/server/tools/interactive/biocworkshop_a0_intro_notebook.xml:
+    useSecret: false
+    applyToJob: true
+    applyToSetupJob: true
+    applyToWeb: true
+    applyToWorkflow: true
+    applyToNginx: true
+    tpl: false
+    content: |
+      <tool id="interactive_tool_jupyter_a0_intro_notebook" tool_type="interactive" name="(A0) # Introductory Notebook" version="0.2">
+          <requirements>
+              <container type="docker">bioconductor/yes-jupyter:21.10</container>
+          </requirements>
+          <entry_points>
+              <entry_point name="a0_intro_notebook" requires_domain="True">
+                  <port>8888</port>
+                  <url>ipython/lab</url>
+                  <url>ipython/lab</url>
+              </entry_point>
+          </entry_points>
+          <environment_variables>
+              <environment_variable name="HISTORY_ID">$__history_id__</environment_variable>
+              <environment_variable name="REMOTE_HOST">$__galaxy_url__</environment_variable>
+              <environment_variable name="GALAXY_WEB_PORT">8080</environment_variable>
+              <environment_variable name="GALAXY_URL">$__galaxy_url__</environment_variable>
+              <environment_variable name="API_KEY" inject="api_key" />
+          </environment_variables>
+          <command detect_errors="aggressive"><![CDATA[
+              #import re
+              export GALAXY_WORKING_DIR=`pwd` &&
+              mkdir -p ./jupyter/outputs/ &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+      
+      
+              #for $count, $file in enumerate($input):
+                  #set $cleaned_name = str($count + 1) + '_' + re.sub('[^\w\-\.\s]', '_', str($file.element_identifier))
+                  ln -sf '$file' './jupyter/data/${cleaned_name}.${file.ext}' &&
+              #end for
+      
+              ## change into the directory where the notebooks are located
+              cd ./jupyter/ &&
+              export HOME=/home/jovyan/ &&
+              export PATH=/home/jovyan/.local/bin:\$PATH &&
+      
+              #if $mode.mode_select == 'scratch':
+                  ## copy chapter notebook
+                  ln -s ./YESCDS/inst/ipynb/A0_intro_notebook.ipynb ./A0_intro_notebook.ipynb && ln -s YESCDS/inst/ipynb/images ./images &&
+                  cp '$__tool_directory__/default_notebook.ipynb' ./galaxy_instructions.ipynb &&
+                  jupyter trust ./A0_intro_notebook.ipynb && jupyter trust ./YESCDS/inst/ipynb/A0_intro_notebook.ipynb &&
+                  jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  cp ./YESCDS/inst/ipynb/A0_intro_notebook.ipynb '$jupyter_notebook'
+              #else:
+                  #set $noteboook_name = re.sub('[^\w\-\.\s]', '_', str($mode.ipynb.element_identifier))
+                  cp '$mode.ipynb' './${noteboook_name}.ipynb' &&
+                  jupyter trust './${noteboook_name}.ipynb' &&
+                  #if $mode.run_it:
+                      jupyter nbconvert --to notebook --execute --output ./A0_intro_notebook.ipynb --allow-errors  ./*.ipynb &&
+                      #set $noteboook_name = 'ipython_galaxy_notebook'
+                  #else:
+                      jupyter lab --allow-root --no-browser --NotebookApp.shutdown_button=True &&
+                  #end if
+                  cp './${noteboook_name}.ipynb' '$jupyter_notebook'
+              #end if
+          ]]>
+          </command>
+          <inputs>
+      
+              <conditional name="mode">
+                  <param name="mode_select" type="select" label="Do you already have a notebook?" help="If not, no problem we will provide you with a default one.">
+                      <option value="scratch">Start with a fresh notebook</option>
+                      <option value="previous">Load a previous notebook</option>
+                  </param>
+                  <when value="scratch"/>
+                  <when value="previous">
+                      <param name="ipynb" type="data" format="ipynb" label="IPython Notebook"/>
+                      <param name="run_it" type="boolean" truevalue="true" falsevalue="false" label="Execute notebook and return a new one."
+                          help="This option is useful in workflows when you just want to execute a notebook and not dive into the webfrontend."/>
+                  </when>
+              </conditional>
+              <param name="input" multiple="true" type="data" optional="true" label="Include data into the environment"/>
+      
+          </inputs>
+          <outputs>
+              <data name="jupyter_notebook" format="ipynb" label="(A0) # Introductory Notebook"></data>
+          </outputs>
+          <tests>
+              <test expect_num_outputs="1">
+                  <param name="mode" value="previous" />
+                  <param name="ipynb" value="test.ipynb" />
+                  <param name="run_it" value="true" />
+                  <output name="jupyter_notebook" file="test.ipynb" ftype="ipynb"/>
+              </test>
+          </tests>
+          <help>
+          The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations,
+          visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization,
+          machine learning, and much more.
+      
+          Galaxy offers you to use Jupyter Notebooks directly in Galaxy accessing and interacting with Galaxy datasets as you like. A very common use-case is to
+          do the heavy lifting and data reduction steps in Galaxy and the plotting and more `interactive` part on smaller datasets in Jupyter.
+      
+          You can start with a new Jupyter notebook from scratch or load an already existing one, e.g. from your colleague and execute it on your dataset.
+          If you have a defined input dataset you can even execute a Jupyter notebook in a workflow, given that the notebook is writing the output back to the history.
+      
+          You can import data into the notebook via a predefined `get()` function and write results back to Galaxy with a `put()` function.
+          </help>
+      </tool>
   /galaxy/server/tools/interactive/biocworkshop_a1_cancer_table.xml:
     useSecret: false
     applyToJob: true
@@ -8,7 +115,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a1_cancer_table" tool_type="interactive" name="(A1) Cancer experiences: a personal view" version="0.2">
+      <tool id="interactive_tool_jupyter_a1_cancer_table" tool_type="interactive" name="(A1) # Cancer experiences: a personal view" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -30,7 +137,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -82,7 +189,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A1) Cancer experiences: a personal view"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A1) # Cancer experiences: a personal view"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -115,7 +222,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a2_rates" tool_type="interactive" name="(A2) Cancer rates and public health" version="0.2">
+      <tool id="interactive_tool_jupyter_a2_rates" tool_type="interactive" name="(A2) # Cancer rates and public health" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -137,7 +244,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -189,7 +296,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A2) Cancer rates and public health"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A2) # Cancer rates and public health"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -222,7 +329,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a3_monitoring" tool_type="interactive" name="(A3) County-level variation in cancer rates" version="0.2">
+      <tool id="interactive_tool_jupyter_a3_monitoring" tool_type="interactive" name="(A3) # County-level variation in cancer rates" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -244,7 +351,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -296,7 +403,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A3) County-level variation in cancer rates"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A3) # County-level variation in cancer rates"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -329,7 +436,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a4_interactive_tables" tool_type="interactive" name="(A4) Interactive rate tables" version="0.2">
+      <tool id="interactive_tool_jupyter_a4_interactive_tables" tool_type="interactive" name="(A4) # Interactive rate tables" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -351,7 +458,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -403,7 +510,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A4) Interactive rate tables"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A4) # Interactive rate tables"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -436,7 +543,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a5_data_graphics" tool_type="interactive" name="(A5) Visualizing variability" version="0.2">
+      <tool id="interactive_tool_jupyter_a5_data_graphics" tool_type="interactive" name="(A5) # Visualizing variability" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -458,7 +565,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -510,7 +617,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A5) Visualizing variability"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A5) # Visualizing variability"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -543,7 +650,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_a6_standardization" tool_type="interactive" name="(A6) Age adjustment for fair comparisons" version="0.2">
+      <tool id="interactive_tool_jupyter_a6_standardization" tool_type="interactive" name="(A6) # Age adjustment for fair comparisons" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -565,7 +672,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -617,7 +724,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(A6) Age adjustment for fair comparisons"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(A6) # Age adjustment for fair comparisons"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -650,7 +757,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_b1_global" tool_type="interactive" name="(B1) Interactive cancer maps" version="0.2">
+      <tool id="interactive_tool_jupyter_b1_global" tool_type="interactive" name="(B1) # Interactive cancer maps" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -672,7 +779,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -724,7 +831,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(B1) Interactive cancer maps"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B1) # Interactive cancer maps"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -757,7 +864,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_b2_table_plus_geo" tool_type="interactive" name="(B2) Basic geographic data about US counties" version="0.2">
+      <tool id="interactive_tool_jupyter_b2_table_plus_geo" tool_type="interactive" name="(B2) # Basic geographic data about US counties" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -779,7 +886,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -831,7 +938,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(B2) Basic geographic data about US counties"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B2) # Basic geographic data about US counties"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -864,7 +971,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_b3_counties" tool_type="interactive" name="(B3) Cancer rates in Massachusetts counties, tabulated" version="0.2">
+      <tool id="interactive_tool_jupyter_b3_counties" tool_type="interactive" name="(B3) # Cancer rates in Massachusetts counties, tabulated" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -886,7 +993,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -938,7 +1045,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(B3) Cancer rates in Massachusetts counties, tabulated"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(B3) # Cancer rates in Massachusetts counties, tabulated"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -971,7 +1078,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_c1_body_overall" tool_type="interactive" name="(C1) Cancers originate in specific organs" version="0.2">
+      <tool id="interactive_tool_jupyter_c1_body_overall" tool_type="interactive" name="(C1) # Cancers originate in specific organs" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -993,7 +1100,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1045,7 +1152,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(C1) Cancers originate in specific organs"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C1) # Cancers originate in specific organs"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1078,7 +1185,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_c2_variation_survival" tool_type="interactive" name="(C2) The survival curve for a cohort of individuals" version="0.2">
+      <tool id="interactive_tool_jupyter_c2_variation_survival" tool_type="interactive" name="(C2) # The survival curve for a cohort of individuals" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1100,7 +1207,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1152,7 +1259,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(C2) The survival curve for a cohort of individuals"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C2) # The survival curve for a cohort of individuals"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1185,7 +1292,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_c3_subtypes_molecular" tool_type="interactive" name="(C3) Molecular origins of tumors and their spread" version="0.2">
+      <tool id="interactive_tool_jupyter_c3_subtypes_molecular" tool_type="interactive" name="(C3) # Molecular origins of tumors and their spread" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1207,7 +1314,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1259,7 +1366,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(C3) Molecular origins of tumors and their spread"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(C3) # Molecular origins of tumors and their spread"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1292,7 +1399,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_d1_clin_trial_concepts" tool_type="interactive" name="(D1) Clinical trials for cancer treatments" version="0.2">
+      <tool id="interactive_tool_jupyter_d1_clin_trial_concepts" tool_type="interactive" name="(D1) # Clinical trials for cancer treatments" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1314,7 +1421,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1366,7 +1473,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(D1) Clinical trials for cancer treatments"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D1) # Clinical trials for cancer treatments"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1399,7 +1506,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_d2_equipoise" tool_type="interactive" name="(D2) Equipoise: individual and clinical" version="0.2">
+      <tool id="interactive_tool_jupyter_d2_equipoise" tool_type="interactive" name="(D2) # Equipoise: individual and clinical" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1421,7 +1528,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1473,7 +1580,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(D2) Equipoise: individual and clinical"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D2) # Equipoise: individual and clinical"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1506,7 +1613,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_d3_randomization_bias" tool_type="interactive" name="(D3) Blinding and randomization to reduce bias" version="0.2">
+      <tool id="interactive_tool_jupyter_d3_randomization_bias" tool_type="interactive" name="(D3) # Blinding and randomization to reduce bias" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1528,7 +1635,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1580,7 +1687,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(D3) Blinding and randomization to reduce bias"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D3) # Blinding and randomization to reduce bias"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">
@@ -1613,7 +1720,7 @@ extraFileMappings:
     applyToNginx: true
     tpl: false
     content: |
-      <tool id="interactive_tool_jupyter_d4_comparing_trt" tool_type="interactive" name="(D4) Comparing cancer treatments" version="0.2">
+      <tool id="interactive_tool_jupyter_d4_comparing_trt" tool_type="interactive" name="(D4) # Comparing cancer treatments" version="0.2">
           <requirements>
               <container type="docker">bioconductor/yes-jupyter:21.10</container>
           </requirements>
@@ -1635,7 +1742,7 @@ extraFileMappings:
               #import re
               export GALAXY_WORKING_DIR=`pwd` &&
               mkdir -p ./jupyter/outputs/ &&
-              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+              mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
       
       
               #for $count, $file in enumerate($input):
@@ -1687,7 +1794,7 @@ extraFileMappings:
       
           </inputs>
           <outputs>
-              <data name="jupyter_notebook" format="ipynb" label="(D4) Comparing cancer treatments"></data>
+              <data name="jupyter_notebook" format="ipynb" label="(D4) # Comparing cancer treatments"></data>
           </outputs>
           <tests>
               <test expect_num_outputs="1">

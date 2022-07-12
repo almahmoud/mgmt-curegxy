@@ -2,6 +2,7 @@ configs:
   tool_conf_yescds.xml: |
     <?xml version='1.0' encoding='utf-8'?>
       <toolbox monitor="true">
+          <tool file="interactive/biocworkshop_a0_intro_notebook.xml" />
           <tool file="interactive/biocworkshop_a1_cancer_table.xml" />
           <tool file="interactive/biocworkshop_a2_rates.xml" />
           <tool file="interactive/biocworkshop_a3_monitoring.xml" />
