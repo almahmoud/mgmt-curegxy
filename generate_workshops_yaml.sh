@@ -39,7 +39,7 @@ EOF
 }
 
 
-( cd generated/workshop-source/ && git clone https://github.com/vjcitn/YESCDS --depth 1 && rm -rf YESCDS/.git/ )
+( cd generated/workshop-source/ && git clone https://github.com/almahmoud/YESCDS --depth 1 && rm -rf YESCDS/.git/ )
 
 ls generated/workshop-source/YESCDS/inst/ipynb/*.ipynb > chapterlist
 
