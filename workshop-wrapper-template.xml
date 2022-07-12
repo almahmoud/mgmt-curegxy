@@ -20,7 +20,7 @@
         #import re
         export GALAXY_WORKING_DIR=`pwd` &&
         mkdir -p ./jupyter/outputs/ &&
-        mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/vjcitn/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
+        mkdir -p ./jupyter/data && mkdir -p ./jupyter/YESCDS && git clone https://github.com/almahmoud/YESCDS ./jupyter/YESCDS && cp ./jupyter/YESCDS/inst/ipynb/common.Rprofile /home/jovyan/.Rprofile && Rscript -e 'IRkernel::installspec(user = FALSE);' &&
 
 
         #for $count, $file in enumerate($input):
